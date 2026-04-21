@@ -1,0 +1,27 @@
+<h1>Sensor Dashboard</h1>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Time</th>
+        <th>Device</th>
+        <th>CO2</th>
+        <th>Temp</th>
+        <th>Humidity</th>
+        <th>pirCount</th>
+        <th>Light</th>
+        <th>Battery</th>
+    </tr>
+
+    {% for row in data %}
+        <tr>
+            <td>{{ row.measuredAt|date('H:i:s') }}</td>
+            <td>{{ row.deviceName }}</td>
+            <td>{{ row.co2 }}</td>
+            <td>{{ row.temperature }}</td>
+            <td>{{ row.humidity }}</td>
+            <td>{{ row.pirCount }}</td>
+            <td>{{ row.light}} </td>
+            <td>{{ row.battery}} </td>
+        </tr>
+    {% endfor %}
+</table>

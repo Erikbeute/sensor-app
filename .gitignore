@@ -8,3 +8,9 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+/var/
+/vendor/
+/node_modules/
+/.env.local
+.env.*.local
+/public/build
