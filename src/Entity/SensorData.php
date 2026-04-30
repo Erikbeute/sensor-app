@@ -13,6 +13,10 @@ class SensorData
     #[ORM\Column]
     private ?int $id = null;
 
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $devEui = null;
+    
     #[ORM\Column(length: 255)]
     private ?string $deviceName = null;
 
@@ -46,9 +50,6 @@ class SensorData
     #[ORM\Column(type: "datetime")]
     private ?\DateTimeInterface $createdAt = null;
 
-    // =====================
-    // GETTERS & SETTERS
-    // =====================
 
     public function getId(): ?int
     {

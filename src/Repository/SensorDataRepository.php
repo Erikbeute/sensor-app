@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
-use App\Entity\SensorData;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\SensorData;
 
 /**
  * @extends ServiceEntityRepository<SensorData>
@@ -14,6 +14,16 @@ class SensorDataRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, SensorData::class);
+    }
+
+
+    public function save(SensorData $sensorData, bool $flush = false): void
+    {
+        $this ->_em -> persist($sensorData); 
+
+        if($flush){
+            $this->_em ->flush(); 
+        }
     }
 
     //    /**

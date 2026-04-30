@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h2>{{ sensordata.deviceName }}</h2>
+
+<table border="1">
+
+{% for row in allSensorData %}
+    <tr><td></td><td></td></tr>
+    <tr><td>Temperature:</td><td>{{ row.temperature }}°C</td></tr>
+    <tr><td>Humidity:</td><td>{{ row.humidity }}%</td></tr>
+    <tr><td>CO2:</td><td>{{ row.co2 }} ppm</td></tr>
+    <tr><td>Light:</td><td>{{ row.light }} lux</td></tr>
+    <tr><td>Battery:</td><td>{{ row.battery }}V</td></tr>
+    <tr><td>Measured:</td><td>{{ row.measuredAt|date('Y-m-d H:i:s') }}</td></tr>
+    <tr><td></td><td></td></tr>
+{% endfor %}
+</table>
+
+{% endblock %}
