@@ -51,7 +51,7 @@ final class DashboardController extends AbstractController
         }
 
         $allSensorData = $repo->findBy(
-            ['deviceName' => $sensordata->getDeviceName()],
+            ['devEui' => $sensordata->getDevEui()],
             ['measuredAt' => 'DESC']
         );
 

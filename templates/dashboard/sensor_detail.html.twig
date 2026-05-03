@@ -3,6 +3,7 @@
 {% block body %}
 <h2>{{ sensordata.deviceName }}</h2>
 
+
 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin: 20px;">
     
     <div>
@@ -28,6 +29,11 @@
     <div>
         <h3>Battery (V)</h3>
         <canvas id="batteryChart" data-chart='{{ chartData|json_encode|e("html_attr") }}'></canvas>
+    </div>
+
+    <div>
+        <h3>Movement (pirCount)</h3>
+        <canvas id="pirCountChart" data-chart='{{ chartData|json_encode|e("html_attr") }}'></canvas>
     </div>
 
     <div>
@@ -173,6 +179,31 @@
             datasets: [{
                 label: 'RSSI (dBm)',
                 data: chartData.rssi,
+                borderColor: 'rgb(156, 39, 176)',
+                backgroundColor: 'rgba(156, 39, 176, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: false }
+            }
+        }
+    });
+
+
+    // RSSI Chart
+    new Chart(document.getElementById('pirCountChart'), {
+        type: 'line',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'Movement (pirCuont)',
+                data: chartData.pirCount,
                 borderColor: 'rgb(156, 39, 176)',
                 backgroundColor: 'rgba(156, 39, 176, 0.1)',
                 tension: 0.1

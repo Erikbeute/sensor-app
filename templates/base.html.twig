@@ -5,13 +5,16 @@
     <title>{% block title %}Sensor Dashboard{% endblock %}</title>
 </head>
 <body>
-    <h1>Sensor Dashboard</h1>
      {% include 'partials/header.twig.html' %}
 
     {% block body %}
     {% endblock %}
 
-        {% include 'partials/footer.twig.html' %}
+    {% include 'partials/footer.twig.html' %}
 
+
+{% block stylesheets %}
+    {{ importmap('app') }}
+{% endblock %}
 </body>
 </html>

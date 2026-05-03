@@ -1,0 +1,52 @@
+body {
+    background-color: lightgrey;
+}
+
+html, body{
+    font-family: verdana; 
+}
+
+
+
+
+/* Header *//* Header *//* Header *//* Header *//* Header *//* Header *//* Header */
+header {
+    background-color: #1e293b; /* donker blauw/grijs */
+    padding: 0 2rem;
+}
+
+/* Nav container */
+nav {
+    display: flex;
+    align-items: center;
+    height: 60px;
+}
+
+/* Menu */
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+/* Links */
+nav a {
+    text-decoration: none;
+    color: #e2e8f0; /* licht grijs */
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* Hover effect */
+nav a:hover {
+    color: #38bdf8; /* licht blauw accent */
+}
+
+/* Actieve link (optioneel class toevoegen in Twig) */
+nav a.active {
+    color: #38bdf8;
+    border-bottom: 2px solid #38bdf8;
+    padding-bottom: 4px;
+}

@@ -14,6 +14,7 @@ class ChartDataService
      */
     public function prepareChartData(array $sensorDataCollection): array
     {
+
         return [
             'labels' => array_map(
                 fn($row) => $row->getMeasuredAt()->format('H:i'),
@@ -40,6 +41,10 @@ class ChartDataService
                 array_reverse($sensorDataCollection)
             ),
             'rssi' => array_map(
+                fn($row) => $row->getRssi(),
+                array_reverse($sensorDataCollection)
+            ),
+            'pirCount' => array_map(
                 fn($row) => $row->getRssi(),
                 array_reverse($sensorDataCollection)
             ),
