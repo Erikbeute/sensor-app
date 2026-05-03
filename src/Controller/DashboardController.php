@@ -10,12 +10,16 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Entity\SensorData;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\ChartDataService;
+use App\Service\SensorViewService;
+use Doctrine\ORM\EntityManagerInterface; 
 
 final class DashboardController extends AbstractController
 {
     public function __construct(
-        private ChartDataService $chartDataService
-    ) {}
+        private ChartDataService $chartDataService,
+        private SensorViewService $sensorViewService
+    ) {
+    }
 
     #[Route('/', name: 'dashboard')]
     public function index(SensorDataRepository $repo): Response
@@ -41,47 +45,41 @@ final class DashboardController extends AbstractController
     public function findSensorData(int $id, SensorDataRepository $repo, Request $request): Response
     {
         $sensordata = $repo->find($id);
-        
+
         if (!$sensordata) {
             throw $this->createNotFoundException('Sensor not found');
         }
 
         $allSensorData = $repo->findBy(
-            ['deviceName' => $sensordata->getDeviceName()], 
+            ['deviceName' => $sensordata->getDeviceName()],
             ['measuredAt' => 'DESC']
         );
 
         $chartData = $this->chartDataService->prepareChartData($allSensorData);
-        $template = $this->getTemplate($request);
-        $templateData = $this->getTemplateData($sensordata, $allSensorData, $chartData, $template);
+        $template = $this->sensorViewService->getTemplate($request);
+        $templateData = $this->sensorViewService->getTemplateData($sensordata, $allSensorData, $chartData, $template);
 
         return $this->render($template, $templateData);
     }
 
-    private function getTemplate(Request $request): string
+    #[Route('/api/sensor-data/{id}', name: 'sensor_update', methods: ['PUT'])]
+    public function updateDeviceName( int $id, Request $request, SensorDataRepository $repo, EntityManagerInterface $em ): JsonResponse 
     {
-        return $request->headers->get('HX-Request')
-            ? 'dashboard/sensor_data_fragment.html.twig'
-            : 'dashboard/sensor_detail.html.twig';
-    }
+        $sensorToUpdate = $repo->find($id);
 
-    private function getTemplateData(SensorData $sensordata, array $allSensorData, array $chartData, string $template): array
-    {
-        $baseData = [
-            'allData' => $allSensorData,
-            'chartData' => $chartData
-        ];
-
-        if ($template === 'dashboard/sensor_detail.html.twig') {
-            $baseData['sensordata'] = $sensordata;
+        if (!$sensorToUpdate) {
+            return new JsonResponse(['error' => 'Not found'], 404);
         }
 
-        return $baseData;
+        $data = json_decode($request->getContent(), true);
+        $sensorToUpdate->setDeviceName($data['deviceName']);
+        $em->flush(); 
+
+        return new JsonResponse(['status' => 'updated']);
     }
 
     #[Route('/api/sensor-data', name: 'sensor_save', methods: ['POST'])]
-    public function saveData(Request $request, SensorDataRepository $repo): JsonResponse
-    {
+    public function saveData(Request $request, SensorDataRepository $repo, EntityManagerInterface $em ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
         $sensorData = new SensorData();
@@ -99,11 +97,12 @@ final class DashboardController extends AbstractController
 
         $sensorData->setMeasuredAt(
             isset($data['measuredAt'])
-            ? new \DateTime($data['measuredAt'])
-            : new \DateTime()
+                ? new \DateTime($data['measuredAt'])
+                : new \DateTime()
         );
 
-        $repo->save($sensorData, true);
+        $em->persist($sensorData);
+        $em->flush();
 
         return new JsonResponse(['status' => 'saved']);
     }
