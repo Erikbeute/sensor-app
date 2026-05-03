@@ -3,18 +3,190 @@
 {% block body %}
 <h2>{{ sensordata.deviceName }}</h2>
 
-<table border="1">
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin: 20px;">
+    
+    <div>
+        <h3>Temperature (°C)</h3>
+        <canvas id="tempChart" data-chart='{{ chartData|json_encode|e("html_attr") }}'></canvas>
+    </div>
 
-{% for row in allSensorData %}
-    <tr><td></td><td></td></tr>
-    <tr><td>Temperature:</td><td>{{ row.temperature }}°C</td></tr>
-    <tr><td>Humidity:</td><td>{{ row.humidity }}%</td></tr>
-    <tr><td>CO2:</td><td>{{ row.co2 }} ppm</td></tr>
-    <tr><td>Light:</td><td>{{ row.light }} lux</td></tr>
-    <tr><td>Battery:</td><td>{{ row.battery }}V</td></tr>
-    <tr><td>Measured:</td><td>{{ row.measuredAt|date('Y-m-d H:i:s') }}</td></tr>
-    <tr><td></td><td></td></tr>
-{% endfor %}
-</table>
+    <div>
+        <h3>Humidity (%)</h3>
+        <canvas id="humidityChart" data-chart='{{ chartData|json_encode|e("html_attr") }}'></canvas>
+    </div>
 
+    <div>
+        <h3>CO2 (ppm)</h3>
+        <canvas id="co2Chart" data-chart='{{ chartData|json_encode|e("html_attr") }}'></canvas>
+    </div>
+
+    <div>
+        <h3>Light (lux)</h3>
+        <canvas id="lightChart" data-chart='{{ chartData|json_encode|e("html_attr") }}'></canvas>
+    </div>
+
+    <div>
+        <h3>Battery (V)</h3>
+        <canvas id="batteryChart" data-chart='{{ chartData|json_encode|e("html_attr") }}'></canvas>
+    </div>
+
+    <div>
+        <h3>RSSI (dBm)</h3>
+        <canvas id="rssiChart" data-chart='{{ chartData|json_encode|e("html_attr") }}'></canvas>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const canvas = document.getElementById('tempChart');
+    const chartData = JSON.parse(canvas.dataset.chart);
+
+    // Temperature Chart
+    new Chart(document.getElementById('tempChart'), {
+        type: 'line',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'Temperature (°C)',
+                data: chartData.temperature,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: false }
+            }
+        }
+    });
+
+    // Humidity Chart
+    new Chart(document.getElementById('humidityChart'), {
+        type: 'line',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'Humidity (%)',
+                data: chartData.humidity,
+                borderColor: 'rgb(54, 162, 235)',
+                backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { 
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+
+    // CO2 Chart
+    new Chart(document.getElementById('co2Chart'), {
+        type: 'line',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'CO2 (ppm)',
+                data: chartData.co2,
+                borderColor: 'rgb(75, 192, 75)',
+                backgroundColor: 'rgba(75, 192, 75, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Light Chart
+    new Chart(document.getElementById('lightChart'), {
+        type: 'line',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'Light (lux)',
+                data: chartData.light,
+                borderColor: 'rgb(255, 193, 7)',
+                backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Battery Chart
+    new Chart(document.getElementById('batteryChart'), {
+        type: 'line',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'Battery (V)',
+                data: chartData.battery,
+                borderColor: 'rgb(0, 200, 83)',
+                backgroundColor: 'rgba(0, 200, 83, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: false }
+            }
+        }
+    });
+
+    // RSSI Chart
+    new Chart(document.getElementById('rssiChart'), {
+        type: 'line',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'RSSI (dBm)',
+                data: chartData.rssi,
+                borderColor: 'rgb(156, 39, 176)',
+                backgroundColor: 'rgba(156, 39, 176, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: false }
+            }
+        }
+    });
+</script>
 {% endblock %}
