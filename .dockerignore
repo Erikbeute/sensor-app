@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env.local
+.env.*.local
+var/cache
+var/log
+var/test
+node_modules
+npm-debug.log
+.DS_Store
+*.swp
+*.swo
+.vscode
+.idea
+*.iml
+.php-cs-fixer.cache
